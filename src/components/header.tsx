@@ -10,7 +10,7 @@ export function Header() {
 
   return (
     <header
-      className={`flex items-start justify-between p-5 bg-cover h-80`}
+      className="flex items-start justify-between p-5 bg-cover h-80 mx-6 mt-6 rounded-xl"
       style={{
         backgroundImage: `url(${bg})`,
       }}
