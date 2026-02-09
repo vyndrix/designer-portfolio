@@ -1,9 +1,11 @@
 import { Header } from "./components/header";
+import { SkillsSection } from "./components/skills-section";
 
 function App() {
   return (
-    <main>
+    <main className="flex flex-col">
       <Header />
+      <SkillsSection />
     </main>
   );
 }
