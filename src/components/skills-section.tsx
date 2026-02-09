@@ -1,11 +1,22 @@
 import { ALargeSmall, Antenna, Anvil, Axe } from "lucide-react";
+import { useState } from "react";
 import { Skill } from "./skill";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "./ui/pagination";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 export function SkillsSection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
   return (
     <section className="flex justify-center p-8">
-      <Tabs className="flex basis-3xl gap-8">
+      <Tabs className="flex flex-col basis-3xl gap-8">
         <TabsList className="self-center">
           <TabsTrigger value="fintech" className="gap-1.5 py-1.5 px-2.5">
             <ALargeSmall />
@@ -61,6 +72,33 @@ export function SkillsSection() {
             <Skill />
           </div>
         </TabsContent>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() =>
+                  setActiveIndex((current) => Math.max(current - 1, 0))
+                }
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink isActive={activeIndex === 0}>1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink isActive={activeIndex === 1}>2</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink isActive={activeIndex === 2}>3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                onClick={() =>
+                  setActiveIndex((current) => Math.min(current + 1, 2))
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </Tabs>
     </section>
   );
