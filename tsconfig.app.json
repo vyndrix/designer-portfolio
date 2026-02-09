@@ -26,8 +26,9 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/theme": ["./src/theme/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "svgr.d.ts"]
 }

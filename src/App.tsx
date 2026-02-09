@@ -1,11 +1,9 @@
-import { Theme } from "./theme";
+import { Header } from "./components/header";
 
 function App() {
   return (
     <main>
-      <header className="flex items-center justify-between p-4">
-        <Theme.Switch />
-      </header>
+      <Header />
     </main>
   );
 }
