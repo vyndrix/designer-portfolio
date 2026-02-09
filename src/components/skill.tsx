@@ -1,14 +1,19 @@
 import { BaggageClaim, ShoppingCart } from "lucide-react";
-import bg from "./../assets/soft-grey-gradient-bg.png?url";
+import bgLight from "./../assets/soft-grey-gradient-bg.png?url";
+import bgDark from "./../assets/soft-grey-gradient-bg-dark.png?url";
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
+import { useTheme } from "../theme";
 
 export function Skill() {
+  const { theme } = useTheme();
   return (
     <Card className="overflow-hidden">
       <CardHeader
         className="bg-cover h-54"
-        style={{ backgroundImage: `url(${bg})` }}
+        style={{
+          backgroundImage: `url(${theme === "dark" ? bgDark : bgLight})`,
+        }}
       />
       <CardContent className="flex justify-between bg-primary/5">
         <div>

@@ -1,18 +1,20 @@
 import { BookOpen } from "lucide-react";
 import { useState } from "react";
-import { Theme } from "../theme";
-import bg from "../assets/soft-grey-gradient-bg.png?url";
+import bgDark from "../assets/soft-grey-gradient-bg-dark.png?url";
+import bgLight from "../assets/soft-grey-gradient-bg.png?url";
+import { Theme, useTheme } from "../theme";
 import { Button } from "./ui/button";
 import { Icon } from "./ui/icon";
 
 export function Header() {
   const [translation, setTranslation] = useState(false);
+  const { theme } = useTheme();
 
   return (
     <header
-      className="flex items-start justify-between p-5 bg-cover h-80 mx-6 mt-6 rounded-xl"
+      className="flex items-start justify-between p-5 bg-cover h-80 mx-6 mt-6 rounded-xl dark:border"
       style={{
-        backgroundImage: `url(${bg})`,
+        backgroundImage: `url(${theme === "dark" ? bgDark : bgLight})`,
       }}
     >
       <div>
