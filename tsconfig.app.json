@@ -26,9 +26,8 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/theme": ["./src/theme/*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["src", "svgr.d.ts"]
+  "include": ["src", "svgr.d.ts", "main.tsx"]
 }
