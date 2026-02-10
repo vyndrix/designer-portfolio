@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@/components/ui/tooltip";
 import Routes from "@/routes";
 import { Theme } from "@/theme";
 import React from "react";
@@ -8,7 +9,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <HashRouter>
       <Theme.Provider>
-        <Routes />
+        <TooltipProvider>
+          <Routes />
+        </TooltipProvider>
       </Theme.Provider>
     </HashRouter>
   </React.StrictMode>,
