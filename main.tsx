@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Routes from "@/routes";
 import { Theme } from "@/theme";
@@ -14,5 +15,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </TooltipProvider>
       </Theme.Provider>
     </HashRouter>
+    <Toaster />
   </React.StrictMode>,
 );
