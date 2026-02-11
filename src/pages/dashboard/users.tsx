@@ -1,11 +1,22 @@
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Field, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Table,
@@ -28,8 +39,6 @@ import {
   ChevronsLeft,
   ChevronsRight,
   EllipsisVertical,
-  Eye,
-  EyeOff,
 } from "lucide-react";
 import { useState } from "react";
 import z from "zod";
@@ -86,7 +95,15 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
   {
     id: "actions",
-    cell: () => (
+    cell: ({ row }) => <ActionCell original={row.original} />,
+  },
+];
+
+const ActionCell = ({ original }: { original: z.infer<typeof schema> }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="float-right">
           <Button
@@ -99,16 +116,54 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setOpen(true)}>
+            Edit
+          </DropdownMenuItem>
           <DropdownMenuItem>Make a copy</DropdownMenuItem>
           <DropdownMenuItem>Favorite</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    ),
-  },
-];
+      <Dialog modal={true} open={open} onOpenChange={setOpen}>
+        <form>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit User</DialogTitle>
+              <DialogDescription>
+                Make changes to your user here. Click save when you're done.
+              </DialogDescription>
+            </DialogHeader>
+            <FieldGroup>
+              <Field>
+                <Label>Name</Label>
+                <Input value={original?.name || ""} />
+              </Field>
+              <Field>
+                <Label>Email</Label>
+                <Input value={original?.email || ""} />
+              </Field>
+              <Field>
+                <Label>Login</Label>
+                <Input value={original?.login || ""} />
+              </Field>
+              <Field>
+                <Label>Password</Label>
+                <Input value={original?.password || ""} />
+              </Field>
+            </FieldGroup>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+              <Button type="submit">Save</Button>
+            </DialogFooter>
+          </DialogContent>
+        </form>
+      </Dialog>
+    </>
+  );
+};
 
 export function DashboardUsers() {
   const [pagination, setPagination] = useState({
@@ -134,10 +189,10 @@ export function DashboardUsers() {
       <article
         className={`
           w-[calc(100vw-4rem)]
-    md:w-[calc(100vw-var(--sidebar-width)-4rem)]
-    overflow-hidden
-    rounded-lg
-    border
+          md:w-[calc(100vw-var(--sidebar-width)-4rem)]
+          overflow-hidden
+          rounded-lg
+          border
         `}
       >
         <Table>
