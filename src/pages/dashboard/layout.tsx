@@ -19,7 +19,7 @@ import { NavLink, Outlet, useMatch } from "react-router";
 export function DashboardLayout() {
   return (
     <SidebarProvider>
-      <main className="flex">
+      <main className="flex flex-1 p-8">
         <Sidebar>
           <SidebarHeader className="flex flex-row items-center justify-start gap-4 py-6">
             <Avatar size="lg">
