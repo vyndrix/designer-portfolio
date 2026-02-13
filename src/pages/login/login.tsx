@@ -3,13 +3,13 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { sb } from "@/remote";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import z from "zod";
 
 const schema = z.object({
-  user: z.string().nonempty("User is required"),
+  email: z.string().nonempty("Email is required"),
   password: z.string().nonempty("Password is required"),
 });
 
@@ -35,13 +35,15 @@ export function Login() {
   });
 
   const submit = useCallback(
-    handleSubmit((data) => {
-      if (data.user === "admin" && data.password === "admin") {
-        toast.success("Login successful");
-        return navigate("/dashboard", { replace: true });
-      }
+    handleSubmit(async (form) => {
+      const { data, error } = await sb.auth.signInWithPassword({
+        email: form.email,
+        password: form.password,
+      });
 
-      toast.error("Invalid credentials");
+      if (!!error || !data.session) return toast.error("Invalid credentials");
+
+      toast.success("Invalid credentials");
     }),
     [navigate, handleSubmit],
   );
@@ -57,13 +59,12 @@ export function Login() {
         </CardHeader>
         <CardContent>
           <form onSubmit={submit}>
-            {/* <CardContent className="flex flex-col gap-6 pb-5"> */}
             <FieldGroup>
               <Field>
                 <FieldLabel>User</FieldLabel>
                 <Input
-                  {...register("user")}
-                  aria-invalid={!!errors.user?.message}
+                  {...register("email")}
+                  aria-invalid={!!errors.email?.message}
                   required
                 />
               </Field>

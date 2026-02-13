@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
@@ -13,24 +14,31 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import { Bean, CircleSlash, FileLock } from "lucide-react";
+import { useAuth } from "@/remote";
+import { Bean, CircleSlash, FileLock, LogOut } from "lucide-react";
 import { NavLink, Outlet, useMatch } from "react-router";
 
 export function DashboardLayout() {
+  const { user, signOut } = useAuth();
+
   return (
     <SidebarProvider>
       <main className="flex flex-1 p-8">
         <Sidebar>
-          <SidebarHeader className="flex flex-row items-center justify-start gap-4 py-6">
+          <SidebarHeader className="flex flex-row items-center justify-start gap-4 pt-6 px-3 pb-3">
             <Avatar size="lg">
               <AvatarImage src="#" />
               <AvatarFallback delayMs={600}>AD</AvatarFallback>
             </Avatar>
             <div>
-              <h1 className="text-xl font-medium">Hello, admin</h1>
+              <h1 className="text.lg font-medium">{`Hello, ${user?.email?.split("@")[0]}`}</h1>
               <h3 className="text-xs text-primary/50">Welcome back!</h3>
             </div>
           </SidebarHeader>
+          <Button size="xs" onClick={signOut} className="m-3 mt-1">
+            <LogOut className="rotate-180" />
+            Logout
+          </Button>
           <Separator />
           <SidebarContent>
             <SidebarGroup>
