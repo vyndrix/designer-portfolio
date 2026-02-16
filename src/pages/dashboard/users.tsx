@@ -1,3 +1,4 @@
+import { FieldInput } from "@/components/field-input";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Field, FieldGroup } from "@/components/ui/field";
+import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
@@ -28,6 +30,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  DEFAULT_USER,
   useMutateUser,
   UserSchema,
   useUsersQuery,
@@ -138,22 +141,20 @@ export function DashboardUsers() {
 
   return (
     <section className="flex flex-1 flex-col gap-6">
-      <header className="flex items-center justify-between">
-        <h2 className="flex text-2xl font-medium">Users</h2>
-        <Button variant="outline" size="icon-sm" onClick={() => null}>
-          <Plus className="cursor-pointer text-muted-foreground" />
-        </Button>
-      </header>
-      <article
-        className={`
+      <UserModalProvider>
+        <header className="flex items-center justify-between">
+          <h2 className="flex text-2xl font-medium">Users</h2>
+          <AddUserButton />
+        </header>
+        <article
+          className={`
           w-[calc(100vw-4rem)]
           md:w-[calc(100vw-var(--sidebar-width)-4rem)]
           overflow-hidden
           rounded-lg
           border
           `}
-      >
-        <UserModalProvider>
+        >
           <Table>
             <TableHeader className="bg-muted sticky top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -201,8 +202,8 @@ export function DashboardUsers() {
               )}
             </TableBody>
           </Table>
-        </UserModalProvider>
-      </article>
+        </article>
+      </UserModalProvider>
       <div className="flex items-center justify-end px-4">
         <div className="flex w-full items-center gap-8 lg:w-fit">
           <div className="ml-auto flex items-center gap-2 lg:ml-0">
@@ -256,8 +257,18 @@ export function DashboardUsers() {
   );
 }
 
+const AddUserButton = () => {
+  const { openModal } = useUserModal();
+
+  return (
+    <Button variant="outline" size="icon-sm" onClick={() => openModal()}>
+      <Plus className="cursor-pointer text-muted-foreground" />
+    </Button>
+  );
+};
+
 const UserModalContext = createContext<{
-  openModal: (user: User) => void;
+  openModal: (user?: User) => void;
 }>({ openModal: () => null });
 
 function UserModalProvider({ children }: { children: React.ReactNode }) {
@@ -268,25 +279,28 @@ function UserModalProvider({ children }: { children: React.ReactNode }) {
   );
   const { mutate, isPending } = useMutateUser();
 
-  const { register, handleSubmit, reset } = useForm<User>({
+  const methods = useForm<User>({
     resolver: zodResolver(UserSchema),
   });
 
-  const openModal = (user: User) => {
-    setUserId(user.id);
+  const openModal = (user?: User) => {
+    setUserId(user?.id ?? null);
     setOpen(true);
   };
 
-  const onSubmit = handleSubmit((data: User) => mutate(data));
+  const onSubmit = methods.handleSubmit((data: User) => mutate(data));
 
-  useEffect(() => reset(user), [user]);
+  useEffect(() => {
+    const parsedUser: User = user || DEFAULT_USER;
+    methods.reset(parsedUser);
+  }, [user]);
 
   return (
     <UserModalContext.Provider value={{ openModal }}>
       {children}
       <Dialog modal={true} open={open} onOpenChange={setOpen}>
         <DialogContent>
-          <form onSubmit={onSubmit}>
+          <Form methods={methods} onSubmit={onSubmit}>
             <DialogHeader>
               <DialogTitle>Edit User</DialogTitle>
               <DialogDescription>
@@ -294,28 +308,32 @@ function UserModalProvider({ children }: { children: React.ReactNode }) {
               </DialogDescription>
             </DialogHeader>
             <FieldGroup>
-              <Field>
-                <Label>First Name</Label>
-                <Input
-                  // value={user?.first_name ?? ""}
-                  {...register("first_name")}
+              <FieldInput
+                control={methods.control}
+                label="Email"
+                disabled={!!user}
+                required={!user}
+                name="email"
+              />
+              {!user && (
+                <FieldInput
+                  control={methods.control}
+                  label="Password"
+                  name="password"
+                  type="password"
+                  required
                 />
-              </Field>
-              <Field>
-                <Label>Last Name</Label>
-                <Input
-                  // value={user?.last_name ?? ""}
-                  {...register("last_name")}
-                />
-              </Field>
-              <Field>
-                <Label>Email</Label>
-                <Input
-                  // value={user?.email ?? ""}
-                  disabled
-                  {...register("email")}
-                />
-              </Field>
+              )}
+              <FieldInput
+                control={methods.control}
+                label="First Name"
+                name="first_name"
+              />
+              <FieldInput
+                control={methods.control}
+                label="Last Name"
+                name="last_name"
+              />
             </FieldGroup>
             <DialogFooter>
               <DialogClose asChild>
@@ -326,7 +344,7 @@ function UserModalProvider({ children }: { children: React.ReactNode }) {
                 {"Save"}
               </Button>
             </DialogFooter>
-          </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </UserModalContext.Provider>
@@ -334,3 +352,15 @@ function UserModalProvider({ children }: { children: React.ReactNode }) {
 }
 
 const useUserModal = () => useContext(UserModalContext);
+
+const TextInput = ({
+  label,
+  ...props
+}: { label: string } & React.ComponentProps<typeof Input>) => {
+  return (
+    <Field>
+      <Label>{label}</Label>
+      <Input {...props} />
+    </Field>
+  );
+};

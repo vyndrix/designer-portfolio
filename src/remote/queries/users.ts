@@ -9,18 +9,31 @@ import z from "zod";
 import { sb } from "..";
 import type { QueryFunction } from "../type";
 
+export const UserSchema = z
+  .object({
+    id: z.string(),
+    first_name: z.string(),
+    last_name: z.string(),
+    email: z.string().nonempty({ message: "Email is required" }),
+    password: z.string().optional(),
+  })
+  .refine((d) => !(!d.id && !d.password), {
+    message: "Password is required for new users",
+    path: ["password"],
+  });
+
+export type User = z.infer<typeof UserSchema>;
+
+export const DEFAULT_USER: User = {
+  id: "",
+  first_name: "",
+  last_name: "",
+  email: "",
+};
+
 export const user_keys: Record<string, QueryKey> = {
   all: ["users"],
 };
-
-export const UserSchema = z.object({
-  id: z.string(),
-  first_name: z.string(),
-  last_name: z.string(),
-  email: z.string(),
-});
-
-export type User = z.infer<typeof UserSchema>;
 
 export const useUsersQuery: QueryFunction<User[]> = (select) => {
   return useQuery({
@@ -37,8 +50,8 @@ export const useUsersQuery: QueryFunction<User[]> = (select) => {
 };
 
 /**
- * TODO: I suspect supabase trigger is not working well, maybe the problem is with updateUser
- *       investigate later.
+ * TODO: I suspect supabase trigger is not working well, maybe the problem is with updateUser.
+ *       Investigate later.
  */
 export const useMutateUser = () => {
   const client = useQueryClient();
@@ -53,15 +66,29 @@ export const useMutateUser = () => {
       //   },
       // });
 
-      const { error } = await sb
-        .from("profiles")
-        .update({
-          first_name: user.first_name,
-          last_name: user.last_name,
-        })
-        .eq("id", user.id);
+      let res;
 
-      if (!!error) throw error;
+      if (!!user.id)
+        res = await sb
+          .from("profiles")
+          .update({
+            first_name: user.first_name,
+            last_name: user.last_name,
+          })
+          .eq("id", user.id);
+      else
+        res = await sb.auth.signUp({
+          email: user.email,
+          password: "temporary-password",
+          options: {
+            data: {
+              first_name: user.first_name,
+              last_name: user.last_name,
+            },
+          },
+        });
+
+      if (!!res.error) return res.error;
     },
     onSuccess: () => {
       toast.success("User updated successfully");
