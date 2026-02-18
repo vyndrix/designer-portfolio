@@ -24,7 +24,7 @@ export function FieldInput<TF extends FV = FV, TN extends FP<TF> = FP<TF>>({
   const id = useId();
 
   return (
-    <Field data-invalid={!!errors[name]}>
+    <Field id={id} data-invalid={!!errors[name]}>
       <FieldLabel htmlFor={id} data-invalid={!!errors[name]}>
         {label}
       </FieldLabel>

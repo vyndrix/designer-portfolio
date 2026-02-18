@@ -13,14 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./ui/table";
+import Table from "./ui/table";
 
 type Props<T> = {
   data: T[];
@@ -56,51 +49,51 @@ export function EntityTable<T>({ data, columns }: Props<T>) {
           `}
       >
         <Table>
-          <TableHeader className="bg-muted sticky top-0 z-10">
+          <Table.Header className="bg-muted sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <Table.Row key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
+                    <Table.Head key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
                           )}
-                    </TableHead>
+                    </Table.Head>
                   );
                 })}
-              </TableRow>
+              </Table.Row>
             ))}
-          </TableHeader>
-          <TableBody className="**:data-[slot=table-cell]:first:w-8">
+          </Table.Header>
+          <Table.Body className="**:data-[slot=table-cell]:first:w-8">
             {table.getRowModel().rows?.length ? (
               <>
                 {table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} className="relative z-0">
+                  <Table.Row key={row.id} className="relative z-0">
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <Table.Cell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),
                         )}
-                      </TableCell>
+                      </Table.Cell>
                     ))}
-                  </TableRow>
+                  </Table.Row>
                 ))}
               </>
             ) : (
-              <TableRow>
-                <TableCell
+              <Table.Row>
+                <Table.Cell
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
                   No results.
-                </TableCell>
-              </TableRow>
+                </Table.Cell>
+              </Table.Row>
             )}
-          </TableBody>
+          </Table.Body>
         </Table>
       </article>
       <div className="flex items-center justify-end p-4">

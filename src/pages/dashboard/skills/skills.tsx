@@ -1,30 +1,30 @@
 import { EntityTable } from "@/components/entity-table";
 import { Table } from "@/components/ui";
 import { Button } from "@/components/ui/button";
-import { useUsersQuery, type User } from "@/remote/queries/users";
-import { type ColumnDef } from "@tanstack/react-table";
+import { useSkillsQuery, type Skill } from "@/remote/queries/skills";
+import type { ColumnDef } from "@tanstack/react-table";
 import { Plus, RefreshCcw } from "lucide-react";
 import {
   EntityFormModalProvider,
   useEntityFormModal,
 } from "../entity-form-modal-context";
-import { UserFormModal } from "./user-form-modal";
+import { SkillFormModal } from "./skill-form.modal";
 
-const columns: ColumnDef<User>[] = [
+const columns: ColumnDef<Skill>[] = [
   {
-    accessorKey: "First Name",
-    header: "First Name",
-    cell: ({ row }) => <Table.Label>{row.original.first_name}</Table.Label>,
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => <Table.Label>{row.original.name}</Table.Label>,
   },
   {
-    accessorKey: "Last Name",
-    header: "Last Name",
-    cell: ({ row }) => <Table.Label>{row.original.last_name}</Table.Label>,
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ row }) => <Table.Label>{row.original.description}</Table.Label>,
   },
   {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => <Table.Label>{row.original.email}</Table.Label>,
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ row }) => <Table.Label>{row.original.created_at}</Table.Label>,
   },
   {
     id: "actions",
@@ -36,15 +36,7 @@ const columns: ColumnDef<User>[] = [
           items={[
             {
               label: "Edit",
-              onClick: () => {
-                open(row.original.id);
-              },
-            },
-            {
-              label: "Reset Password",
-              onClick: () => {
-                //TODO-IMPLEMENT: Implement reset password functionality
-              },
+              onClick: () => open(row.original.id),
             },
             {
               label: "Delete",
@@ -60,15 +52,15 @@ const columns: ColumnDef<User>[] = [
   },
 ];
 
-export function DashboardUsers() {
+export function DashboardSkills() {
   const { open } = useEntityFormModal();
-  const { data: users, refetch } = useUsersQuery();
+  const { data: skills, refetch } = useSkillsQuery();
 
   return (
     <section className="flex flex-1 flex-col gap-6">
       <EntityFormModalProvider>
         <header className="flex">
-          <h2 className="flex flex-1 text-2xl font-medium">Users</h2>
+          <h2 className="flex flex-1 text-2xl font-medium">Skills</h2>
           <Button
             variant="outline"
             size="icon-sm"
@@ -81,8 +73,8 @@ export function DashboardUsers() {
             <RefreshCcw className="cursor-pointer text-muted-foreground" />
           </Button>
         </header>
-        <EntityTable data={users || []} columns={columns} />
-        <UserFormModal />
+        <EntityTable data={skills || []} columns={columns} />
+        <SkillFormModal />
       </EntityFormModalProvider>
     </section>
   );
