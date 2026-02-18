@@ -88,7 +88,7 @@ export function DatePickerInput<
         />
         <InputGroupAddon align="inline-end">
           <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger>
+            <PopoverTrigger asChild>
               <InputGroupButton
                 id={id}
                 variant="ghost"
