@@ -4,10 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useSkillsQuery, type Skill } from "@/remote/queries/skills";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Plus, RefreshCcw } from "lucide-react";
-import {
-  EntityFormModalProvider,
-  useEntityFormModal,
-} from "../entity-form-modal-context";
+import { useEntityFormModal } from "../entity-form-modal-context";
 import { SkillFormModal } from "./skill-form.modal";
 
 const columns: ColumnDef<Skill>[] = [
@@ -58,24 +55,22 @@ export function DashboardSkills() {
 
   return (
     <section className="flex flex-1 flex-col gap-6">
-      <EntityFormModalProvider>
-        <header className="flex">
-          <h2 className="flex flex-1 text-2xl font-medium">Skills</h2>
-          <Button
-            variant="outline"
-            size="icon-sm"
-            className="mr-2"
-            onClick={() => open(null)}
-          >
-            <Plus className="cursor-pointer text-muted-foreground" />
-          </Button>
-          <Button variant="outline" size="icon-sm" onClick={() => refetch()}>
-            <RefreshCcw className="cursor-pointer text-muted-foreground" />
-          </Button>
-        </header>
-        <EntityTable data={skills || []} columns={columns} />
-        <SkillFormModal />
-      </EntityFormModalProvider>
+      <header className="flex">
+        <h2 className="flex flex-1 text-2xl font-medium">Skills</h2>
+        <Button
+          variant="outline"
+          size="icon-sm"
+          className="mr-2"
+          onClick={() => open(null)}
+        >
+          <Plus className="cursor-pointer text-muted-foreground" />
+        </Button>
+        <Button variant="outline" size="icon-sm" onClick={() => refetch()}>
+          <RefreshCcw className="cursor-pointer text-muted-foreground" />
+        </Button>
+      </header>
+      <EntityTable data={skills || []} columns={columns} />
+      <SkillFormModal />
     </section>
   );
 }

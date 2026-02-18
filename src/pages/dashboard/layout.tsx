@@ -17,6 +17,7 @@ import {
 import { useAuth } from "@/remote";
 import { Bean, CircleSlash, FileLock, LogOut } from "lucide-react";
 import { NavLink, Outlet, useMatch } from "react-router";
+import { EntityFormModalProvider } from "./entity-form-modal-context";
 
 export function DashboardLayout() {
   const { user, signOut } = useAuth();
@@ -77,7 +78,9 @@ export function DashboardLayout() {
             </h3>
           </SidebarFooter>
         </Sidebar>
-        <Outlet />
+        <EntityFormModalProvider>
+          <Outlet />
+        </EntityFormModalProvider>
       </main>
     </SidebarProvider>
   );
