@@ -1,5 +1,6 @@
 import { FieldInput } from "@/components/field-input";
 import { Button } from "@/components/ui/button";
+import { DatePickerInput } from "@/components/ui/date-picker";
 import {
   Dialog,
   DialogClose,
@@ -23,13 +24,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useEntityFormModal } from "../entity-form-modal-context";
-import { DatePickerInput } from "@/components/ui/date-picker";
 
 export function SkillFormModal() {
   const { entityId, isOpen, close } = useEntityFormModal();
 
   const { data: skill } = useSkillsQuery((data: Skill[]) =>
-    data.find((s) => s.id === entityId),
+    data.find((s) => s.id === Number(entityId)),
   );
   const { mutate, isPending } = useMutateSkill();
 

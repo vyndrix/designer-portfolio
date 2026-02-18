@@ -36,7 +36,7 @@ const columns: ColumnDef<Skill>[] = [
           items={[
             {
               label: "Edit",
-              onClick: () => open(row.original.id),
+              onClick: () => open(`${row.original.id}`),
             },
             {
               label: "Delete",

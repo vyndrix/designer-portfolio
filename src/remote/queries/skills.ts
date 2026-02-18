@@ -9,17 +9,22 @@ import z from "zod";
 import { sb } from "..";
 import type { QueryFunction } from "../type";
 
-export const SkillSchema = z.object({
-  id: z.string(),
-  created_at: z.string(),
-  name: z.string(),
-  description: z.string(),
-});
+export const SkillSchema = z
+  .object({
+    id: z.number(),
+    created_at: z.string(),
+    name: z.string(),
+    description: z.string(),
+  })
+  .transform((v) => ({
+    ...v,
+    created_at: new Date(v.created_at).toISOString(),
+  }));
 
 export type Skill = z.infer<typeof SkillSchema>;
 
 export const DEFAULT_SKILL: Skill = {
-  id: "",
+  id: 0,
   created_at: "",
   name: "",
   description: "",
@@ -48,6 +53,7 @@ export const useMutateSkill = () => {
 
   return useMutation({
     mutationFn: async (skill: Skill) => {
+      console.log(2);
       let res;
 
       if (!!skill.id)
