@@ -24,7 +24,7 @@ export const SkillSchema = z
 export type Skill = z.infer<typeof SkillSchema>;
 
 export const DEFAULT_SKILL: Skill = {
-  id: 0,
+  id: -1,
   created_at: "",
   name: "",
   description: "",
@@ -53,7 +53,6 @@ export const useMutateSkill = () => {
 
   return useMutation({
     mutationFn: async (skill: Skill) => {
-      console.log(2);
       let res;
 
       if (!!skill.id)
