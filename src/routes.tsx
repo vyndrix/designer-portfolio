@@ -2,7 +2,7 @@
 
 import { Route, Routes } from "react-router";
 import { DashboardLayout } from "./pages/dashboard/layout";
-import { DashboardProjects } from "./pages/dashboard/projects";
+import { DashboardProjects } from "./pages/dashboard/projects/projects";
 import { DashboardSkills } from "./pages/dashboard/skills/skills";
 import { DashboardUsers } from "./pages/dashboard/users/users";
 import { Home } from "./pages/home";
