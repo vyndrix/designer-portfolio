@@ -5,7 +5,7 @@ import { useSkillsQuery, type Skill } from "@/remote/queries/skills";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Plus, RefreshCcw } from "lucide-react";
 import { useEntityFormModal } from "../entity-form-modal-context";
-import { SkillFormModal } from "./skill-form.modal";
+import { SkillFormModal } from "./skill-form-modal";
 
 const columns: ColumnDef<Skill>[] = [
   {
