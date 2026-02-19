@@ -1,5 +1,6 @@
 import { FieldInput } from "@/components/field-input";
 import { Button } from "@/components/ui/button";
+import { DatePickerInput } from "@/components/ui/date-picker";
 import {
   Dialog,
   DialogClose,
@@ -13,72 +14,73 @@ import { FieldGroup } from "@/components/ui/field";
 import { Form } from "@/components/ui/form";
 import { Spinner } from "@/components/ui/spinner";
 import {
-  DEFAULT_USER,
-  useMutateUser,
-  UserSchema,
-  useUsersQuery,
-  type User,
-} from "@/remote/queries/users";
+  DEFAULT_PROJECT,
+  ProjectSchema,
+  useMutateProject,
+  useProjectsQuery,
+  type Project,
+} from "@/remote/queries/projects";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useEntityFormModal } from "../entity-form-modal-context";
 
-export function UserFormModal() {
+export default function ProjectFormModal() {
   const { entityId, isOpen, close } = useEntityFormModal();
 
-  const { data: user } = useUsersQuery((data: User[]) =>
-    data.find((u) => u.id === entityId),
+  const { data: project } = useProjectsQuery((data: Project[]) =>
+    data.find((s) => s.id === Number(entityId)),
   );
-  const { mutate, isPending } = useMutateUser();
+  const { mutate, isPending } = useMutateProject();
 
-  const methods = useForm<User>({
-    resolver: zodResolver(UserSchema),
+  const methods = useForm<Project>({
+    resolver: zodResolver(ProjectSchema),
   });
 
-  const onSubmit = methods.handleSubmit((data: User) => mutate(data));
+  const onSubmit = methods.handleSubmit((data: Project) => mutate(data));
 
   useEffect(() => {
-    const parsedUser: User = user || DEFAULT_USER;
-    methods.reset(parsedUser);
-  }, [user]);
+    console;
+
+    const parsedProject: Project = project || DEFAULT_PROJECT;
+    methods.reset({
+      ...parsedProject,
+      created_at: new Date(
+        project?.created_at || new Date().getTime(),
+      ).toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      }),
+    });
+  }, [project]);
 
   return (
     <Dialog modal={true} open={isOpen} onOpenChange={close}>
       <DialogContent>
         <Form methods={methods} onSubmit={onSubmit}>
           <DialogHeader>
-            <DialogTitle>Edit User</DialogTitle>
+            <DialogTitle>Edit Project</DialogTitle>
             <DialogDescription>
-              Make changes to your user here. Click save when you're done.
+              Make changes to your project here. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
           <FieldGroup>
-            <FieldInput
+            <DatePickerInput
               control={methods.control}
-              label="Email"
-              disabled={!!user}
-              required={!user}
-              name="email"
-            />
-            {!user && (
-              <FieldInput
-                control={methods.control}
-                label="Password"
-                name="password"
-                type="password"
-                required
-              />
-            )}
-            <FieldInput
-              control={methods.control}
-              label="First Name"
-              name="first_name"
+              label="Date"
+              name="created_at"
             />
             <FieldInput
               control={methods.control}
-              label="Last Name"
-              name="last_name"
+              label="Name"
+              required
+              name="name"
+            />
+            <FieldInput
+              control={methods.control}
+              label="Description"
+              name="description"
             />
           </FieldGroup>
           <DialogFooter>

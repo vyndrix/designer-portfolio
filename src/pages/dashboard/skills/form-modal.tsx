@@ -14,55 +14,54 @@ import { FieldGroup } from "@/components/ui/field";
 import { Form } from "@/components/ui/form";
 import { Spinner } from "@/components/ui/spinner";
 import {
-  DEFAULT_PROJECT,
-  ProjectSchema,
-  useMutateProject,
-  useProjectsQuery,
-  type Project,
-} from "@/remote/queries/projects";
+  DEFAULT_SKILL,
+  SkillSchema,
+  useMutateSkill,
+  useSkillsQuery,
+  type Skill,
+} from "@/remote/queries/skills";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useEntityFormModal } from "../entity-form-modal-context";
 
-export function ProjectFormModal() {
+export default function SkillFormModal() {
   const { entityId, isOpen, close } = useEntityFormModal();
 
-  const { data: project } = useProjectsQuery((data: Project[]) =>
+  const { data: skill } = useSkillsQuery((data: Skill[]) =>
     data.find((s) => s.id === Number(entityId)),
   );
-  const { mutate, isPending } = useMutateProject();
+  const { mutate, isPending } = useMutateSkill();
 
-  const methods = useForm<Project>({
-    resolver: zodResolver(ProjectSchema),
+  const methods = useForm<Skill>({
+    resolver: zodResolver(SkillSchema),
   });
 
-  const onSubmit = methods.handleSubmit((data: Project) => mutate(data));
+  const onSubmit = methods.handleSubmit((data: Skill) => mutate(data));
 
   useEffect(() => {
-    console;
-
-    const parsedProject: Project = project || DEFAULT_PROJECT;
+    const parsedSkill: Skill = skill || DEFAULT_SKILL;
     methods.reset({
-      ...parsedProject,
-      created_at: new Date(
-        project?.created_at || new Date().getTime(),
-      ).toLocaleDateString("en-US", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      }),
+      ...parsedSkill,
+      created_at: new Date(skill?.created_at || "").toLocaleDateString(
+        "en-US",
+        {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        },
+      ),
     });
-  }, [project]);
+  }, [skill]);
 
   return (
     <Dialog modal={true} open={isOpen} onOpenChange={close}>
       <DialogContent>
         <Form methods={methods} onSubmit={onSubmit}>
           <DialogHeader>
-            <DialogTitle>Edit Project</DialogTitle>
+            <DialogTitle>Edit Skill</DialogTitle>
             <DialogDescription>
-              Make changes to your project here. Click save when you're done.
+              Make changes to your skill here. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
           <FieldGroup>

@@ -3,7 +3,7 @@ import { useSkillsQuery, type Skill } from "@/remote/queries/skills";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useEntityFormModal } from "../entity-form-modal-context";
 import { Section } from "../section";
-import { SkillFormModal } from "./skill-form-modal";
+import SkillFormModal from "./form-modal";
 
 const columns: ColumnDef<Skill>[] = [
   {
@@ -47,7 +47,7 @@ const columns: ColumnDef<Skill>[] = [
   },
 ];
 
-export function DashboardSkills() {
+export function SkillsPage() {
   const { open } = useEntityFormModal();
   const { data: skills, refetch } = useSkillsQuery();
 

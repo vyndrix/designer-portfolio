@@ -3,7 +3,7 @@ import { useUsersQuery, type User } from "@/remote/queries/users";
 import { type ColumnDef } from "@tanstack/react-table";
 import { useEntityFormModal } from "../entity-form-modal-context";
 import { Section } from "../section";
-import { UserFormModal } from "./user-form-modal";
+import UserFormModal from "./form-modal";
 
 const columns: ColumnDef<User>[] = [
   {
@@ -55,7 +55,7 @@ const columns: ColumnDef<User>[] = [
   },
 ];
 
-export function DashboardUsers() {
+export function UsersPage() {
   const { open } = useEntityFormModal();
   const { data: users, refetch } = useUsersQuery();
 

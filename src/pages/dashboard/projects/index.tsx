@@ -3,7 +3,7 @@ import { useProjectsQuery, type Project } from "@/remote/queries/projects";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useEntityFormModal } from "../entity-form-modal-context";
 import { Section } from "../section";
-import { ProjectFormModal } from "./project-form-modal";
+import ProjectFormModal from "./form-modal";
 
 const columns: ColumnDef<Project>[] = [
   {
@@ -47,7 +47,7 @@ const columns: ColumnDef<Project>[] = [
   },
 ];
 
-export function DashboardProjects() {
+export function ProjectsPage() {
   const { open } = useEntityFormModal();
   const { data: projects, refetch } = useProjectsQuery();
 
