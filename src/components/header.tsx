@@ -19,7 +19,7 @@ export function Header() {
     >
       <div>
         <h3 className="text-xl font-medium">JOSÉ RIBEIRO</h3>
-        <h5 className="text-md text-primary/50">UX UI Design</h5>
+        <h5 className="text-md">UX UI Design</h5>
       </div>
       <div className="flex gap-2">
         <Button variant="outline" className="w-min-10.5">

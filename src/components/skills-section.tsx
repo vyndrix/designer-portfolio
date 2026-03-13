@@ -1,4 +1,6 @@
-import { ALargeSmall, Antenna, Anvil, Axe } from "lucide-react";
+import { useProjectsQuery } from "@/remote/queries/projects";
+import { useSkillsQuery } from "@/remote/queries/skills";
+import { Anvil, Axe, BicepsFlexed, Briefcase } from "lucide-react";
 import { useState } from "react";
 import { Skill } from "./skill";
 import {
@@ -9,6 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "./ui/pagination";
+import { Spinner } from "./ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 export function SkillsSection() {
@@ -17,8 +20,24 @@ export function SkillsSection() {
   return (
     <section className="flex justify-center p-8">
       <Tabs className="flex flex-col basis-3xl gap-8">
-        <TabsList className="self-center">
-          <TabsTrigger value="fintech" className="gap-1.5 py-1.5 px-2.5">
+        <TabsList variant="default" className="self-center">
+          <TabsTrigger value="skills" className="gap-1.5 py-1.5 px-2.5">
+            <BicepsFlexed />
+            Skills
+          </TabsTrigger>
+          <TabsTrigger value="projects" className="gap-1.5 py-1.5 px-2.5">
+            <Briefcase />
+            Projects
+          </TabsTrigger>
+          <TabsTrigger value="accessibility" className="gap-1.5 py-1.5 px-2.5">
+            <Anvil />
+            Accessibility
+          </TabsTrigger>
+          <TabsTrigger value="design-system" className="gap-1.5 py-1.5 px-2.5">
+            <Axe />
+            Design System
+          </TabsTrigger>
+          {/* <TabsTrigger value="fintech" className="gap-1.5 py-1.5 px-2.5">
             <ALargeSmall />
             Fintech
           </TabsTrigger>
@@ -33,14 +52,20 @@ export function SkillsSection() {
           <TabsTrigger value="design-system" className="gap-1.5 py-1.5 px-2.5">
             <Axe />
             Design System
-          </TabsTrigger>
+          </TabsTrigger> */}
         </TabsList>
-        <span className="text-primary/45 text-center">
+        <span className="text-center">
           O que temos que ter sempre em mente é que a valorização de fatores
           subjetivos estimula a padronização do levantamento das variáveis
           envolvidas.
         </span>
-        <TabsContent value="fintech">
+        <TabsContent value="skills">
+          <Skills />
+        </TabsContent>
+        <TabsContent value="projects">
+          <Projects />
+        </TabsContent>
+        {/* <TabsContent value="fintech">
           <div className="grid grid-cols-2 gap-6">
             <Skill />
             <Skill />
@@ -55,21 +80,45 @@ export function SkillsSection() {
             <Skill />
             <Skill />
           </div>
-        </TabsContent>
+        </TabsContent> */}
         <TabsContent value="accessibility">
           <div className="grid grid-cols-2 gap-6">
-            <Skill />
-            <Skill />
-            <Skill />
-            <Skill />
+            <Skill
+              name="Generic Name"
+              description="Don't mind me, I am your generic description that going to be changed later"
+            />
+            <Skill
+              name="Generic Name"
+              description="Don't mind me, I am your generic description that going to be changed later"
+            />
+            <Skill
+              name="Generic Name"
+              description="Don't mind me, I am your generic description that going to be changed later"
+            />
+            <Skill
+              name="Generic Name"
+              description="Don't mind me, I am your generic description that going to be changed later"
+            />
           </div>
         </TabsContent>
         <TabsContent value="design-system">
           <div className="grid grid-cols-2 gap-6">
-            <Skill />
-            <Skill />
-            <Skill />
-            <Skill />
+            <Skill
+              name="Generic Name"
+              description="Don't mind me, I am your generic description that going to be changed later"
+            />
+            <Skill
+              name="Generic Name"
+              description="Don't mind me, I am your generic description that going to be changed later"
+            />
+            <Skill
+              name="Generic Name"
+              description="Don't mind me, I am your generic description that going to be changed later"
+            />
+            <Skill
+              name="Generic Name"
+              description="Don't mind me, I am your generic description that going to be changed later"
+            />
           </div>
         </TabsContent>
         <Pagination>
@@ -103,3 +152,57 @@ export function SkillsSection() {
     </section>
   );
 }
+
+const Skills = () => {
+  const { data: skills, isFetching, isFetched, error } = useSkillsQuery();
+
+  return (
+    <div className="grid grid-cols-2 gap-6">
+      {isFetching ? (
+        <span className="col-span-2 flex flex-col items-center justify-center p-8 gap-2">
+          <Spinner className="size-8" />
+          Loading
+        </span>
+      ) : isFetched && !!skills?.length ? (
+        skills?.map((skill) => (
+          <Skill
+            key={skill.id}
+            name={skill.name}
+            description={skill.description}
+          />
+        ))
+      ) : (
+        <span className="col-span-2 flex flex-col items-center justify-center p-8 gap-2">
+          No skills found.
+        </span>
+      )}
+    </div>
+  );
+};
+
+const Projects = () => {
+  const { data: projects, isFetching, isFetched } = useProjectsQuery();
+
+  return (
+    <div className="grid grid-cols-2 gap-6">
+      {isFetching ? (
+        <span className="col-span-2 flex flex-col items-center justify-center p-8 gap-2">
+          <Spinner className="size-8" />
+          Loading
+        </span>
+      ) : isFetched && !!projects?.length ? (
+        projects?.map((project) => (
+          <Skill
+            key={project.id}
+            name={project.name}
+            description={project.description}
+          />
+        ))
+      ) : (
+        <span className="col-span-2 flex flex-col items-center justify-center p-8 gap-2">
+          No Projects found.
+        </span>
+      )}
+    </div>
+  );
+};
