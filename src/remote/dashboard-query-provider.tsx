@@ -2,7 +2,7 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
-const queryClient = new QueryClient({
+const DashboardQueryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
@@ -19,14 +19,14 @@ const persistence = createAsyncStoragePersister({
   storage: window.localStorage,
 });
 
-export default function QueryProvider({
+export default function DashboardQueryProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <PersistQueryClientProvider
-      client={queryClient}
+      client={DashboardQueryClient}
       persistOptions={{
         persister: persistence,
         maxAge: 1000 * 60 * 60 * 2, // 2 hours
