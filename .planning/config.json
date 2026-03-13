@@ -1,0 +1,15 @@
+{
+  "workflow": {
+    "prefer_parallel_research": true,
+    "automatic_roadmap_refinement": false,
+    "skip_redundant_research": true
+  },
+  "styling": {
+    "framework": "tailwindcss-v4",
+    "theme_strategy": "css-variables"
+  },
+  "testing": {
+    "strategy": "manual-first",
+    "target_framework": "vitest"
+  }
+}
