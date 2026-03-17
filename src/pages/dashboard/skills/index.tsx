@@ -1,5 +1,9 @@
 import { Table } from "@/components/ui";
-import { useSkillsQuery, type Skill } from "@/remote/queries/skills";
+import {
+  useDeleteSkill,
+  useSkillsQuery,
+  type Skill,
+} from "@/remote/queries/skills";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useEntityFormModal } from "../entity-form-modal-context";
 import { Section } from "../section";
@@ -25,6 +29,7 @@ const columns: ColumnDef<Skill>[] = [
     id: "actions",
     cell: ({ row }) => {
       const { open } = useEntityFormModal();
+      const { mutate: deleteSkill } = useDeleteSkill();
 
       return (
         <Table.Menu
@@ -37,7 +42,9 @@ const columns: ColumnDef<Skill>[] = [
               label: "Delete",
               variant: "destructive",
               onClick: () => {
-                //TODO-IMPLEMENT: Implement delete functionality
+                if (confirm("Are you sure you want to delete this skill?")) {
+                  deleteSkill(row.original.id);
+                }
               },
             },
           ]}

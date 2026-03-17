@@ -1,5 +1,9 @@
 import { Table } from "@/components/ui";
-import { useProjectsQuery, type Project } from "@/remote/queries/projects";
+import {
+  useDeleteProject,
+  useProjectsQuery,
+  type Project,
+} from "@/remote/queries/projects";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useEntityFormModal } from "../entity-form-modal-context";
 import { Section } from "../section";
@@ -25,6 +29,7 @@ const columns: ColumnDef<Project>[] = [
     id: "actions",
     cell: ({ row }) => {
       const { open } = useEntityFormModal();
+      const { mutate: deleteProject } = useDeleteProject();
 
       return (
         <Table.Menu
@@ -37,7 +42,9 @@ const columns: ColumnDef<Project>[] = [
               label: "Delete",
               variant: "destructive",
               onClick: () => {
-                //TODO-IMPLEMENT: Implement delete functionality
+                if (confirm("Are you sure you want to delete this project?")) {
+                  deleteProject(row.original.id);
+                }
               },
             },
           ]}
