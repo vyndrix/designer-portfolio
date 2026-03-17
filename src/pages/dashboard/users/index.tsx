@@ -1,5 +1,10 @@
 import { Table } from "@/components/ui";
-import { useUsersQuery, type User } from "@/remote/queries/users";
+import {
+  useDeleteUser,
+  useResetPassword,
+  useUsersQuery,
+  type User,
+} from "@/remote/queries/users";
 import { type ColumnDef } from "@tanstack/react-table";
 import { useEntityFormModal } from "../entity-form-modal-context";
 import { Section } from "../section";
@@ -25,6 +30,8 @@ const columns: ColumnDef<User>[] = [
     id: "actions",
     cell: ({ row }) => {
       const { open } = useEntityFormModal();
+      const { mutate: deleteUser } = useDeleteUser();
+      const { mutate: resetPassword } = useResetPassword();
 
       return (
         <Table.Menu
@@ -38,14 +45,22 @@ const columns: ColumnDef<User>[] = [
             {
               label: "Reset Password",
               onClick: () => {
-                //TODO-IMPLEMENT: Implement reset password functionality
+                if (
+                  confirm(
+                    `Are you sure you want to send a password reset email to ${row.original.email}?`
+                  )
+                ) {
+                  resetPassword(row.original.email);
+                }
               },
             },
             {
               label: "Delete",
               variant: "destructive",
               onClick: () => {
-                //TODO-IMPLEMENT: Implement delete functionality
+                if (confirm("Are you sure you want to delete this user?")) {
+                  deleteUser(row.original.id);
+                }
               },
             },
           ]}
